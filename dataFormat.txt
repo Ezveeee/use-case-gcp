@@ -1,0 +1,21 @@
+0. id1
+1. id2
+2. id3
+3. chiffre
+4. chiffre
+5. pays je dirais (FR la plupart du temps)
+6. date 
+7. date de fermeture de l'enseigne
+8. adresse
+9. code postal
+10. ville
+11. chiffre (1 la plupart du temps)
+12. date
+13. date
+14. chiffre 
+15. chiffre
+16. nom de l'enseigne
+
+table base de données :
+
+id, nom, date creation, date fermeture, pays, adresse, code postal, ville
