@@ -1,1 +1,1 @@
-# stage-use-case-gcp
+# Use case : Google Cloud Platform
