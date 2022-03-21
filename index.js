@@ -1,2 +1,2 @@
-const publish = require('./publishPubSub');
-exports.publish = publish.publishMessageOnFileUpload_ldi;
+const publishPubSub = require('./publishPubSub');
+exports.publishMessageOnFileUpload_ldi = publishPubSub.publishPubSub;
