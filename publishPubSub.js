@@ -10,8 +10,8 @@ const { PubSub } = require('@google-cloud/pubsub');
 const pubSubClient = new PubSub();
 
 const topic = pubSubClient.topic('use-case-ldi');
-const data = JSON.stringify([{ id: "1711", nom: "DEPOBOIS", date_creation: "2000-01-01", date_fermeture: "2005-08-27", pays: "FR", adresse: "10 avenue de l'Europe", code_postal: "60280", ville: "VENETTE" },
-{ id: "1712", nom: "DEPOBOIS", date_creation: "2000-01-01", date_fermeture: "2005-08-27", pays: "FR", adresse: "10 avenue de l'Europe", code_postal: "60280", ville: "VENETTE" }]);
+const data = JSON.stringify([{ "id": "1711", "nom": "DEPOBOIS", "date_creation": "2000-01-01", "date_fermeture": "2005-08-27", "pays": "FR", "adresse": "10 avenue de l'Europe", "code_postal": "60280", "ville": "VENETTE" },
+{ "id": "1712", "nom": "DEPOBOIS", "date_creation": "2000-01-01", "date_fermeture": "2005-08-27", "pays": "FR", "adresse": "10 avenue de l'Europe", "code_postal": "60280", "ville": "VENETTE" }]);
 const dataBuffer = Buffer.from(data);
 
 // Publish a message inside a topic

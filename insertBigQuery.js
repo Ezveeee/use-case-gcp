@@ -13,12 +13,12 @@ const bigquery = new BigQuery();
 
 const datasetId = 'use_case_ldi';
 const tableId = 'enseignes';
-const rows = JSON.parse(
-    '{ "id": "1711", "nom": "DEPOBOIS", "date_creation": "2000-01-01", "date_fermeture": "2005-08-27", "pays": "FR", "adresse": "10 avenue de l\'Europe", "code_postal": "60280", "ville": "VENETTE"}');
 
 // Insert data into a table
 exports.insertBigQuery = (message, context) => {
     try {
+        data_string = Buffer.from(message.data, 'base64').toString()
+        const rows = JSON.parse(data_string);
         bigquery
             .dataset(datasetId)
             .table(tableId)
