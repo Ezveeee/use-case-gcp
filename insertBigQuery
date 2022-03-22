@@ -1,0 +1,31 @@
+/**
+ * Background Cloud Function to be triggered by Pub/Sub.
+ * This function is exported by index.js, and executed when
+ * the trigger topic receives a message.
+ *
+ * @param {object} message The Pub/Sub message.
+ * @param {object} context The event metadata.
+ */
+
+// Import the Google Cloud client library
+const { BigQuery } = require('@google-cloud/bigquery');
+const bigquery = new BigQuery();
+
+const datasetId = 'use_case_ldi';
+const tableId = 'enseignes';
+const rows = JSON.parse(
+    '{ "id": "1711", "nom": "DEPOBOIS", "date_creation": "2000-01-01", "date_fermeture": "2005-08-27", "pays": "FR", "adresse": "10 avenue de l\'Europe", "code_postal": "60280", "ville": "VENETTE"}');
+
+// Insert data into a table
+exports.insertBigQuery = (message, context) => {
+    try {
+        bigquery
+            .dataset(datasetId)
+            .table(tableId)
+            .insert(rows);
+        console.log(`Inserted ${rows.length} rows`);
+    } catch (error) {
+        console.error(`Received error while inserting: ${error.message}`);
+        process.exitCode = 1;
+    }
+};
