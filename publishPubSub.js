@@ -5,20 +5,48 @@
  * @param {object} context The event metadata.
  */
 
-// Import the Google Cloud client library
+// Import the Google Cloud Pub/Sub & Storage client libraries
 const { PubSub } = require('@google-cloud/pubsub');
 const pubSubClient = new PubSub();
+const { Storage } = require('@google-cloud/storage');
+const storage = new Storage();
 
+// Assign the topic where to publish
 const topic = pubSubClient.topic('use-case-ldi');
-const data = JSON.stringify([{ "id": "1711", "nom": "DEPOBOIS", "date_creation": "2000-01-01", "date_fermeture": "2005-08-27", "pays": "FR", "adresse": "10 avenue de l'Europe", "code_postal": "60280", "ville": "VENETTE" },
-{ "id": "1712", "nom": "DEPOBOIS", "date_creation": "2000-01-01", "date_fermeture": "2005-08-27", "pays": "FR", "adresse": "10 avenue de l'Europe", "code_postal": "60280", "ville": "VENETTE" }]);
-const dataBuffer = Buffer.from(data);
 
 // Publish a message inside a topic
 exports.publishPubSub = (file, context) => {
     try {
-        const messageId = topic.publishMessage({ data: dataBuffer });
-        console.log(`Message ${messageId} published.`);
+        // Read the csv file and convert it to Javascript object
+        storage.bucket('use-case-ldi').file(file.name).download((err, contents) => {
+            if (err) {
+                console.log('error', err);
+                return null
+            }
+            // Split into an array the csv at each end of line
+            var lineArray = contents.toString().split("\r\n");
+            var oneLine = [];
+            var result = [];
+            // Go through each csv line and add it's content to the result variable
+            for (i = 0; i < lineArray.length; ++i) {
+                var temp = {};
+                result.push(temp);
+                oneLine = lineArray[i].toString().split("\t");
+                result[i]["id"] = oneLine[0] + oneLine[1] + oneLine[2];
+                result[i]["nom"] = oneLine[16];
+                result[i]["date_creation"] = oneLine[6];
+                result[i]["date_fermeture"] = oneLine[7];
+                result[i]["pays"] = oneLine[5];
+                result[i]["adresse"] = oneLine[8];
+                result[i]["code_postal"] = oneLine[11];
+                result[i]["ville"] = oneLine[12];
+            }
+            // Convert Javascript object to string and send to topic
+            const stringResult = JSON.stringify(result);
+            const bufferResult = Buffer.from(stringResult);
+            const messageId = topic.publishMessage({ data: bufferResult });
+            console.log(`Message ${messageId} published.`);
+        });
     } catch (error) {
         console.error(`Received error while publishing: ${error.message}`);
         process.exitCode = 1;

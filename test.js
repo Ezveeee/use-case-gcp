@@ -1,12 +1,25 @@
-const a = '[{ "id": "1711", "nom": "DEPOBOIS", "date_creation": "2000-01-01", "date_fermeture": "2005-08-27", "pays": "FR", "adresse": "10 avenue de l\'Europe", "code_postal": "60280", "ville": "VENETTE" }, { "id": "1712", "nom": "DEPOBOIS", "date_creation": "2000-01-01", "date_fermeture": "2005-08-27", "pays": "FR", "adresse": "10 avenue de l\'Europe", "code_postal": "60280", "ville": "VENETTE" }]';
-const b = JSON.parse(a);
+const fs = require('fs');
+const csv = fs.readFileSync('data.csv', 'utf8');
 
-console.log(typeof(a));
-console.log(a);
-console.log();
+var lineArray = csv.toString().split("\r\n");
+var line = [];
 
-console.log(typeof(b));
-console.log(b);
-console.log();
+var result = [];
 
-console.log(b[1].id);
+for(i = 0; i < lineArray.length-1; ++i){
+    line = lineArray[i].toString().split("\t");
+    var temp = {};
+
+    result.push(temp);
+    result[i]["id"] = line[0] + line[1] + line[2];
+    result[i]["nom"] = line[16];
+    result[i]["date_creation"] = line[6];
+    result[i]["date_fermeture"] = line[7];
+    result[i]["pays"] = line[5];
+    result[i]["adresse"] = line[8];
+    result[i]["code_postal"] = line[11];
+    result[i]["ville"] = line[12];
+}
+
+const stringResult = JSON.stringify(result);
+console.log(stringResult);
